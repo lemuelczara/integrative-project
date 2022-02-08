@@ -13,6 +13,9 @@ import java.util.List;
 @Repository
 public interface BatchRepository extends JpaRepository<Batch, Long> {
 
+    @Query("SELECT b FROM Batch b WHERE b.seller.id = :sellerId")
+    List<Batch> findAllBySellerId(@Param("sellerId") Long sellerId);
+
     @Query(value = "SELECT B.BATCH_NUMBER, P.ID as PRODUCT_ID, P.CATEGORY as PRODUCT_CATEGORY, P.DUE_DATE, P.QUANTITY," +
             " DATEDIFF(day, CURRENT_DATE, p.DUE_DATE) AS DATEDIFF  " +
             "FROM BATCHES B JOIN PRODUCTS P  ON (P.BATCH_ID = B.ID) JOIN SECTIONS S ON (B.SECTION_ID = S.id) " +
