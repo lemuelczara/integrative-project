@@ -1,26 +1,26 @@
 package com.meli.bootcamp.integrativeproject.unit;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import com.meli.bootcamp.integrativeproject.entity.*;
+import com.meli.bootcamp.integrativeproject.entity.InboundOrder;
 import com.meli.bootcamp.integrativeproject.enums.Category;
 import com.meli.bootcamp.integrativeproject.exception.BusinessException;
 import com.meli.bootcamp.integrativeproject.exception.NotFoundException;
+import com.meli.bootcamp.integrativeproject.mocks.InboundOrderServiceMocks;
 import com.meli.bootcamp.integrativeproject.repositories.InboundOrderRepository;
 import com.meli.bootcamp.integrativeproject.repositories.SellerRepository;
 import com.meli.bootcamp.integrativeproject.repositories.WarehouseRepository;
 import com.meli.bootcamp.integrativeproject.service.InboundOrderService;
-import com.meli.bootcamp.integrativeproject.mocks.InboundOrderServiceMocks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 public class InboundOrderServiceTest {
 

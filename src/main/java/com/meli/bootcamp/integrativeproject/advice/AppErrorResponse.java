@@ -1,10 +1,8 @@
 package com.meli.bootcamp.integrativeproject.advice;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import org.springframework.http.HttpStatus;
+import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter

@@ -1,10 +1,8 @@
 package com.meli.bootcamp.integrativeproject.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import com.meli.bootcamp.integrativeproject.entity.Product;
 import com.meli.bootcamp.integrativeproject.enums.Category;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

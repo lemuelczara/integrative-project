@@ -1,7 +1,6 @@
 package com.meli.bootcamp.integrativeproject.repositories;
 
 import com.meli.bootcamp.integrativeproject.entity.Batch;
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

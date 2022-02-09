@@ -3,10 +3,8 @@ package com.meli.bootcamp.integrativeproject.advice;
 import com.meli.bootcamp.integrativeproject.exception.BusinessException;
 import com.meli.bootcamp.integrativeproject.exception.InvalidEnumException;
 import com.meli.bootcamp.integrativeproject.exception.NotFoundException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

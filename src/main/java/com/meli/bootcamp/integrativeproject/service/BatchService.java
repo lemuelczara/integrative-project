@@ -3,7 +3,6 @@ package com.meli.bootcamp.integrativeproject.service;
 import com.meli.bootcamp.integrativeproject.dto.response.BatchSectionNameResponse;
 import com.meli.bootcamp.integrativeproject.dto.response.BatchStock;
 import com.meli.bootcamp.integrativeproject.dto.response.FindBatchesBySellerIdResponseDTO;
-import com.meli.bootcamp.integrativeproject.entity.Agent;
 import com.meli.bootcamp.integrativeproject.entity.Batch;
 import com.meli.bootcamp.integrativeproject.exception.BusinessException;
 import com.meli.bootcamp.integrativeproject.exception.NotFoundException;

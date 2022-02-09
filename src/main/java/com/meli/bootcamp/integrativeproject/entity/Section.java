@@ -2,7 +2,6 @@ package com.meli.bootcamp.integrativeproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meli.bootcamp.integrativeproject.enums.Category;
-
 import lombok.*;
 
 import javax.persistence.*;
