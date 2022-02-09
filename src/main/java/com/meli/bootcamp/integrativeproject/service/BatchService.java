@@ -3,10 +3,14 @@ package com.meli.bootcamp.integrativeproject.service;
 import com.meli.bootcamp.integrativeproject.dto.response.BatchSectionNameResponse;
 import com.meli.bootcamp.integrativeproject.dto.response.BatchStock;
 import com.meli.bootcamp.integrativeproject.dto.response.FindBatchesBySellerIdResponseDTO;
+import com.meli.bootcamp.integrativeproject.entity.Agent;
 import com.meli.bootcamp.integrativeproject.entity.Batch;
 import com.meli.bootcamp.integrativeproject.exception.BusinessException;
+import com.meli.bootcamp.integrativeproject.exception.NotFoundException;
+import com.meli.bootcamp.integrativeproject.repositories.AgentRepository;
 import com.meli.bootcamp.integrativeproject.repositories.BatchRepository;
 import com.meli.bootcamp.integrativeproject.repositories.BatchRepository.BatchResponse;
+import com.meli.bootcamp.integrativeproject.repositories.SellerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,15 +23,23 @@ public class BatchService {
 
     private BatchRepository batchRepository;
 
-    public BatchService(BatchRepository batchRepository) {
+    private SellerRepository sellerRepository;
+
+    private AgentRepository agentRepository;
+
+    public BatchService(BatchRepository batchRepository, SellerRepository sellerRepository, AgentRepository agentRepository) {
         this.batchRepository = batchRepository;
+        this.sellerRepository = sellerRepository;
+        this.agentRepository = agentRepository;
     }
 
-    public List<FindBatchesBySellerIdResponseDTO> findBatchesBySellerId(Long sellerId) {
-        List<FindBatchesBySellerIdResponseDTO> listOfBatchesBySellerId = new ArrayList<>();
+    public List<FindBatchesBySellerIdResponseDTO> findBatchesBySellerId(Long sellerId, Long agentId) {
+        agentRepository.findById(agentId).orElseThrow(() -> new NotFoundException("Agent not found!"));
+        sellerRepository.findById(sellerId).orElseThrow(() -> new NotFoundException("Seller not found!"));
 
         List<Batch> batches = batchRepository.findAllBySellerId(sellerId);
 
+        List<FindBatchesBySellerIdResponseDTO> listOfBatchesBySellerId = new ArrayList<>();
         batches.stream().forEach(batch -> {
             var listOfProductsInTheBatch = batch.getProducts().stream().map(product -> {
                 var productInTheBatch = FindBatchesBySellerIdResponseDTO.ProductResponseDTO.builder()

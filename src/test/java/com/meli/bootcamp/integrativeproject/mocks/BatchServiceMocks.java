@@ -1,5 +1,10 @@
 package com.meli.bootcamp.integrativeproject.mocks;
 
+import com.meli.bootcamp.integrativeproject.entity.Batch;
+import com.meli.bootcamp.integrativeproject.entity.Product;
+import com.meli.bootcamp.integrativeproject.entity.Section;
+import com.meli.bootcamp.integrativeproject.entity.Warehouse;
+import com.meli.bootcamp.integrativeproject.enums.Category;
 import com.meli.bootcamp.integrativeproject.repositories.BatchRepository;
 
 import java.time.LocalDate;
@@ -7,6 +12,40 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BatchServiceMocks {
+    public static Section makeFakeSection() {
+        return Section.builder()
+                .category(Category.CONGELADO)
+                .warehousesSections(null)
+                .build();
+    }
+
+    public static Product makeFakeProduct() {
+        return Product.builder()
+                .name("any name")
+                .batch(null)
+                .category(Category.CONGELADO)
+                .cartProducts(null)
+                .build();
+    }
+
+    public static Warehouse makeFakeWarehouse() {
+        return Warehouse.builder()
+                .name("any name")
+                .warehouseSections(null)
+                .warehouseSellers(null)
+                .agent(null)
+                .build();
+    }
+
+    public static Batch makeFakeBatch() {
+        return Batch.builder()
+                .batchNumber(12345)
+                .warehouse(null)
+                .section(null)
+                .products(null)
+                .build();
+    }
+
     public static List<BatchRepository.BatchResponse> makeFakeListOfBatchResponseWithCongeladoSection() {
         var fakeBatchResponseToCongeladoSection1 = BatchServiceMocks.makeFakeBatchResponse(12345, 1L, "CONGELADO", LocalDate.now().plusDays(9), 24, 9);
         var fakeBatchResponseToCongeladoSection2 = BatchServiceMocks.makeFakeBatchResponse(12345, 2L, "CONGELADO", LocalDate.now().plusDays(3), 12, 3);

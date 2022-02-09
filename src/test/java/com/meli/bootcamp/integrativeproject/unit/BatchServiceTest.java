@@ -1,16 +1,25 @@
 package com.meli.bootcamp.integrativeproject.unit;
 
+import com.meli.bootcamp.integrativeproject.entity.*;
+import com.meli.bootcamp.integrativeproject.enums.Category;
 import com.meli.bootcamp.integrativeproject.exception.BusinessException;
+import com.meli.bootcamp.integrativeproject.exception.NotFoundException;
 import com.meli.bootcamp.integrativeproject.mocks.BatchServiceMocks;
+import com.meli.bootcamp.integrativeproject.repositories.AgentRepository;
 import com.meli.bootcamp.integrativeproject.repositories.BatchRepository;
+import com.meli.bootcamp.integrativeproject.repositories.SellerRepository;
 import com.meli.bootcamp.integrativeproject.service.BatchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
@@ -19,17 +28,36 @@ public class BatchServiceTest {
     @Mock
     private BatchRepository batchRepository;
 
+    @Mock
+    private SellerRepository sellerRepository;
+
+    @Mock
+    private AgentRepository agentRepository;
+
     private BatchService service;
 
     private String validSectionName = "FF";
     private Integer validNumberOfDays = 1;
     private String validAscParameter = "true";
 
+    private Product fakeProduct;
+
+    private Warehouse fakeWarehouse;
+
+    private Batch fakeBatch;
+
+    private Section fakeSection;
+
     @BeforeEach
     public void beforeEach() {
         MockitoAnnotations.openMocks(this);
 
-        service = new BatchService(batchRepository);
+        fakeProduct = BatchServiceMocks.makeFakeProduct();
+        fakeWarehouse = BatchServiceMocks.makeFakeWarehouse();
+        fakeBatch = BatchServiceMocks.makeFakeBatch();
+        fakeSection = BatchServiceMocks.makeFakeSection();
+
+        service = new BatchService(batchRepository, sellerRepository, agentRepository);
     }
 
     @Test
@@ -144,5 +172,56 @@ public class BatchServiceTest {
 
         assertEquals(1, response3.getBatchStock().size());
         assertEquals(4, response3.getBatchStock().get(0).getProductId());
+    }
+
+    @Test
+    public void shouldBeThrowsIfAgentNotFound() {
+        var validSellerId = 1L;
+        var invalidAgentId = 999L;
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
+                service.findBatchesBySellerId(validSellerId, invalidAgentId));
+
+        assertEquals("Agent not found!", exception.getMessage());
+    }
+
+    @Test
+    public void shouldBeThrowsIfSellerNotFound() {
+        var invalidSellerId = 999L;
+        var validAgentId = 1L;
+
+        when(agentRepository.findById(anyLong())).thenReturn(Optional.of(new Agent()));
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
+                service.findBatchesBySellerId(invalidSellerId, validAgentId));
+
+        assertEquals("Seller not found!", exception.getMessage());
+    }
+
+    @Test
+    public void shouldBeReturnsListOfBatchesFilteredBySellerId() {
+        var validSellerId = 1L;
+        var validAgentId = 1L;
+
+        fakeSection.setCategory(Category.CONGELADO);
+
+        fakeWarehouse.setName("Armazém de São Paulo");
+
+        fakeProduct.setName("Frango");
+
+        fakeBatch.setSection(fakeSection);
+        fakeBatch.setWarehouse(fakeWarehouse);
+        fakeBatch.setProducts(Arrays.asList(fakeProduct));
+
+        when(agentRepository.findById(anyLong())).thenReturn(Optional.of(new Agent()));
+        when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(new Seller()));
+        when(batchRepository.findAllBySellerId(anyLong())).thenReturn(Arrays.asList(fakeBatch));
+
+        var response = service.findBatchesBySellerId(validSellerId, validAgentId);
+
+        assertEquals(12345, response.get(0).getBatchNumber());
+        assertEquals("CONGELADO", response.get(0).getSectionName());
+        assertEquals("Armazém de São Paulo", response.get(0).getWarehouseName());
+        assertEquals("Frango", response.get(0).getProducts().get(0).getName());
     }
 }

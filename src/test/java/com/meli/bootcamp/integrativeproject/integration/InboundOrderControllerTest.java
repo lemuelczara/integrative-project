@@ -14,10 +14,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.transaction.Transactional;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("integration_tests")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 public class InboundOrderControllerTest {
 
     @Autowired

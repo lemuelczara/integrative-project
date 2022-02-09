@@ -28,6 +28,7 @@ public class BatchControllerTest {
     @BeforeAll
     public void beforeAll() {
         jdbcTemplate.execute("INSERT INTO warehouses (name) VALUES ('Armazém de São Paulo')");
+        jdbcTemplate.execute("INSERT INTO agents (name, warehouse_id) VALUES ('Lemuel', 1)");
         jdbcTemplate.execute("INSERT INTO seller (name) VALUES ('Sadia')");
 
         jdbcTemplate.execute("INSERT INTO sections (category) VALUES ('REFRIGERADO')");
@@ -196,5 +197,43 @@ public class BatchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.batchStock.length()").value("1"))
                 .andExpect(jsonPath("$.batchStock[0].productId").value("1"));
+    }
+
+    @Test
+    @Order(7)
+    public void shouldBeReturns404IfSellerNotFound() throws Exception {
+        this.mockMvc
+                .perform(get("/fresh-products/batch")
+                        .param("sellerId", "999")
+                        .header("agentId", "1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Seller not found!"));
+    }
+
+    @Test
+    @Order(8)
+    public void shouldBeReturns404IfAgentNotFound() throws Exception {
+        this.mockMvc
+                .perform(get("/fresh-products/batch")
+                        .param("sellerId", "1")
+                        .header("agentId", "999")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Agent not found!"));
+    }
+
+    @Test
+    @Order(9)
+    public void shouldBeReturns200WithListOfBatchesFilteredBySellerId() throws Exception {
+        this.mockMvc
+                .perform(get("/fresh-products/batch")
+                        .param("sellerId", "1")
+                        .header("agentId", "1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value("6"))
+                .andExpect(jsonPath("$[0].batchNumber").value("123456"))
+                .andExpect(jsonPath("$[0].products[0].name").value("Mussarela"));
     }
 }
